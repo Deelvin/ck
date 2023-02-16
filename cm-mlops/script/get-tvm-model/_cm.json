@@ -1,5 +1,5 @@
 {
-  "alias": "get-ml-model-resnet50-tvm",
+  "alias": "get-tvm-model",
   "automation_alias": "script",
   "automation_uid": "5b4e0237da074764",
   "cache": true,
@@ -38,15 +38,45 @@
   ],
   "tags": [
     "get",
-    "ml-model",
-    "ml-model-tvm",
     "tvm-model",
-    "resnet50",
-    "ml-model-resnet50",
-    "image-classification"
+    "generic"
   ],
-  "uid": "c1b7b656b6224307",
+  "uid": "70c21477a2b24d22",
   "variations": {
+    "onnx": {
+      "add_deps_recursive": {
+        "original-model": {
+          "tags": "_onnx"
+        }
+      },
+      "default": true,
+      "deps": [
+        {
+          "names": [
+            "onnx"
+          ],
+          "tags": "get,generic-python-lib,_onnx"
+        }
+      ],
+      "group": "framework"
+    },
+    "pytorch": {
+      "add_deps_recursive": {
+        "original-model": {
+          "tags": "_pytorch"
+        }
+      },
+      "deps": [
+        {
+          "names": [
+            "pytorch",
+            "torch"
+          ],
+          "tags": "get,generic-python-lib,_torch"
+        }
+      ],
+      "group": "framework"
+    },
     "fp32": {
       "add_deps_recursive": {
         "original-model": {
@@ -64,78 +94,21 @@
       },
       "group": "precision"
     },
-    "uint8": {
-      "add_deps_recursive": {
-        "original-model": {
-          "tags": "_uint8"
-        }
+    "batch_size.#": {
+      "env": {
+        "CM_ML_MODEL_MAX_BATCH_SIZE": "#"
       },
-      "group": "precision"
+      "group": "batchsize"
     },
-    "onnx": {
-      "default": true,
+    "resnet50": {
       "deps": [
         {
           "names": [
             "original-model"
           ],
           "tags": "get,ml-model,raw,resnet50,_onnx"
-        },
-        {
-          "names": [
-            "onnx"
-          ],
-          "tags": "get,generic-python-lib,_onnx"
         }
-      ],
-      "group": "framework"
-    },
-    "pytorch": {
-      "deps": [
-        {
-          "names": [
-            "original-model"
-          ],
-          "tags": "get,ml-model,raw,resnet50,_pytorch"
-        },
-        {
-          "names": [
-            "pytorch",
-            "torch"
-          ],
-          "tags": "get,generic-python-lib,_torch"
-        }
-      ],
-      "group": "framework"
-    },
-    "tensorflow": {
-      "deps": [
-        {
-          "names": [
-            "original-model"
-          ],
-          "tags": "get,ml-model,raw,resnet50,_tf"
-        },
-        {
-          "names": [
-            "tensorflow"
-          ],
-          "tags": "get,generic-python-lib,_tensorflow"
-        }
-      ],
-      "group": "framework"
-    },
-    "tf": {
-      "alias": "tensorflow"
-    },
-    "tflite": {
-      "alias": "tensorflow"
-    },
-    "batch_size.#": {
-      "group": "batchsize",
-      "env": {
-        "CM_ML_MODEL_MAX_BATCH_SIZE": "#"
-      }
+      ]
     }
   }
 }

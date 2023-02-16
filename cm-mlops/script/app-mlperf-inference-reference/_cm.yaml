@@ -227,6 +227,15 @@ deps:
   ########################################################################
   # Install ML models    
 
+   ## Models with TVM backend
+  - tags: get,tvm-model,generic
+    names:
+    - tvm-model
+    enable_if_env:
+      CM_MLPERF_BACKEND:
+      - tvm-onnx
+      - tvm-pytorch
+
   ## ResNet50
   - tags: get,ml-model,image-classification,resnet50
     names:
@@ -397,7 +406,7 @@ deps:
     - inference-src
 
 
-posthook_deps: 
+posthook_deps:
   - names:
     - runner
     tags: benchmark,program
@@ -488,7 +497,6 @@ variations:
   tvm-onnx:
     group: framework
     env:
-      CM_MLPERF_LOADGEN_MAX_BATCHSIZE: '1'
       CM_MLPERF_BACKEND: tvm-onnx
       CM_MLPERF_BACKEND_VERSION: <<<CM_ONNXRUNTIME_VERSION>>>
     deps:
@@ -497,13 +505,23 @@ variations:
       names:
         tvm
     add_deps_recursive:
-      ml-model:
-        tags: tvm-model,_onnx
+      tvm-model:
+        tags: _resnet50,_onnx
+        enable_if_env:
+          CM_MODEL:
+          - resnet50
+        tags: _mobilenet,_onnx
+        enable_if_env:
+          CM_MODEL:
+          - mobilenet
+        tags: _efficientnet,_onnx
+        enable_if_env:
+          CM_MODEL:
+          - efficientnet
 
   tvm-pytorch:
     group: framework
     env:
-      CM_MLPERF_LOADGEN_MAX_BATCHSIZE: '1'
       CM_MLPERF_BACKEND: tvm-pytorch
       CM_MLPERF_BACKEND_VERSION: <<<CM_PYTORCH_VERSION>>>
       MLPERF_TVM_TORCH_QUANTIZED_ENGINE: qnnpack
@@ -512,8 +530,19 @@ variations:
       names:
         tvm
     add_deps_recursive:
-      ml-model:
-        tags: tvm-model,_pytorch
+      tvm-model:
+        tags: _resnet50,_pytorch
+        enable_if_env:
+          CM_MODEL:
+            - resnet50
+        tags: _mobilenet,_onnx
+        enable_if_env:
+          CM_MODEL:
+          - mobilenet
+        tags: _efficientnet,_onnx
+        enable_if_env:
+          CM_MODEL:
+          - efficientnet
 
   # Reference MLPerf models
   bert-99.9:
@@ -690,7 +719,7 @@ variations:
     env:
       CM_MLPERF_LOADGEN_MAX_BATCHSIZE: "#"
     add_deps_recursive:
-      ml-model:
+      tvm-model:
         tags:
           _batch_size.#
 
