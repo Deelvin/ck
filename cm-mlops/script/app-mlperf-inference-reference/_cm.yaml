@@ -225,16 +225,7 @@ deps:
 
 
   ########################################################################
-  # Install ML models    
-
-   ## Models with TVM backend
-  - tags: get,tvm-model,generic
-    names:
-    - tvm-model
-    enable_if_env:
-      CM_MLPERF_BACKEND:
-      - tvm-onnx
-      - tvm-pytorch
+  # Install ML models
 
   ## ResNet50
   - tags: get,ml-model,image-classification,resnet50
@@ -501,23 +492,9 @@ variations:
       CM_MLPERF_BACKEND_VERSION: <<<CM_ONNXRUNTIME_VERSION>>>
     deps:
     - tags: get,generic-python-lib,_onnx
-    - tags: get,tvm
+    - tags: get,tvm-model,generic,_resnet50
       names:
-        tvm
-    add_deps_recursive:
-      tvm-model:
-        tags: _resnet50,_onnx
-        enable_if_env:
-          CM_MODEL:
-          - resnet50
-        tags: _mobilenet,_onnx
-        enable_if_env:
-          CM_MODEL:
-          - mobilenet
-        tags: _efficientnet,_onnx
-        enable_if_env:
-          CM_MODEL:
-          - efficientnet
+        tvm-model
 
   tvm-pytorch:
     group: framework
@@ -534,15 +511,11 @@ variations:
         tags: _resnet50,_pytorch
         enable_if_env:
           CM_MODEL:
-            - resnet50
-        tags: _mobilenet,_onnx
+          - resnet50
+        tags: _retinanet,_pytorch
         enable_if_env:
           CM_MODEL:
-          - mobilenet
-        tags: _efficientnet,_onnx
-        enable_if_env:
-          CM_MODEL:
-          - efficientnet
+          - retinanet
 
   # Reference MLPerf models
   bert-99.9:

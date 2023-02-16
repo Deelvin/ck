@@ -109,6 +109,23 @@
           "tags": "get,ml-model,raw,resnet50,_onnx"
         }
       ]
+    },
+    "retinanet": {
+      "deps": [
+	{
+	  "names": [
+	    "original-model"
+	  ],
+	  "tags": "get,ml-model,raw,retinanet,_onnx"
+	}
+      ]
+    },
+    "pip-install": {
+      "add_deps_recursive": {
+	"tvm": {
+	  "tags": "_pip-install"
+	}
+      }
     }
   }
 }
