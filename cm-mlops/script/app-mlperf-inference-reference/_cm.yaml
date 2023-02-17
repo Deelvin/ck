@@ -693,12 +693,13 @@ variations:
     env:
       CM_MLPERF_LOADGEN_MAX_BATCHSIZE: "#"
     add_deps_recursive:
-      ml-model:
+      resnet50-model:
         tags:
           _batch_size.#
       tvm-model:
         tags:
           _batch_size.#
+
 
   # Reproducibility (past submissions)
   r2.1_default:
