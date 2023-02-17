@@ -225,7 +225,7 @@ deps:
 
 
   ########################################################################
-  # Install ML models    
+  # Install ML models
 
   ## ResNet50
   - tags: get,ml-model,image-classification,resnet50
@@ -397,7 +397,7 @@ deps:
     - inference-src
 
 
-posthook_deps: 
+posthook_deps:
   - names:
     - runner
     tags: benchmark,program
@@ -488,32 +488,35 @@ variations:
   tvm-onnx:
     group: framework
     env:
-      CM_MLPERF_LOADGEN_MAX_BATCHSIZE: '1'
       CM_MLPERF_BACKEND: tvm-onnx
       CM_MLPERF_BACKEND_VERSION: <<<CM_ONNXRUNTIME_VERSION>>>
     deps:
-    - tags: get,generic-python-lib,_onnx
-    - tags: get,tvm
+    - tags: get,tvm-model,generic,_onnx
       names:
-        tvm
-    add_deps_recursive:
-      ml-model:
-        tags: tvm-model,_onnx
+        tvm-model
+       
 
   tvm-pytorch:
     group: framework
     env:
-      CM_MLPERF_LOADGEN_MAX_BATCHSIZE: '1'
       CM_MLPERF_BACKEND: tvm-pytorch
       CM_MLPERF_BACKEND_VERSION: <<<CM_PYTORCH_VERSION>>>
       MLPERF_TVM_TORCH_QUANTIZED_ENGINE: qnnpack
     deps:
-    - tags: get,tvm
+    - tags: get,generic-python-lib,_torch
+    - tags: get,tvm-model,generic
       names:
-        tvm
+        tvm-model
     add_deps_recursive:
-      ml-model:
-        tags: tvm-model,_pytorch
+      tvm-model:
+        tags: _resnet50,_pytorch
+        enable_if_env:
+          CM_MODEL:
+          - resnet50
+        tags: _retinanet,_pytorch
+        enable_if_env:
+          CM_MODEL:
+          - retinanet
 
   # Reference MLPerf models
   bert-99.9:
@@ -690,9 +693,13 @@ variations:
     env:
       CM_MLPERF_LOADGEN_MAX_BATCHSIZE: "#"
     add_deps_recursive:
-      ml-model:
+      resnet50-model:
         tags:
           _batch_size.#
+      tvm-model:
+        tags:
+          _batch_size.#
+
 
   # Reproducibility (past submissions)
   r2.1_default:
