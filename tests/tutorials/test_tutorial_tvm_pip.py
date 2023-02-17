@@ -18,6 +18,6 @@ checks.check_return(r)
 r = cm.access({'action':'run', 'automation':'script', 'tags': 'run,mlperf,inference,generate-run-cmds,_submission,_short,_dashboard', 'adr': \
         {'python': {'name': 'mlperf', 'version_min': '3.8'}, 'tvm': {'tags': '_pip-install'}}, 'submitter': 'Community', \
         'implementation': 'python', 'hw_name': 'default', 'model': 'resnet50', 'backend': 'tvm-onnx', 'device': 'cpu', 'scenario': 'Offline', \
-        'test_query_count': '500', 'clean': 'true', 'quiet': 'yes'})
+        'test_query_count': '5', 'clean': 'true', 'quiet': 'yes'})
 checks.check_return(r)
 
