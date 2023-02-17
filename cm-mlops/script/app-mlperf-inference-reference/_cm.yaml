@@ -491,10 +491,10 @@ variations:
       CM_MLPERF_BACKEND: tvm-onnx
       CM_MLPERF_BACKEND_VERSION: <<<CM_ONNXRUNTIME_VERSION>>>
     deps:
-    - tags: get,generic-python-lib,_onnx
-    - tags: get,tvm-model,generic,_resnet50
+    - tags: get,tvm-model,generic,_onnx
       names:
         tvm-model
+       
 
   tvm-pytorch:
     group: framework
@@ -503,9 +503,10 @@ variations:
       CM_MLPERF_BACKEND_VERSION: <<<CM_PYTORCH_VERSION>>>
       MLPERF_TVM_TORCH_QUANTIZED_ENGINE: qnnpack
     deps:
-    - tags: get,tvm
+    - tags: get,generic-python-lib,_torch
+    - tags: get,tvm-model,generic
       names:
-        tvm
+        tvm-model
     add_deps_recursive:
       tvm-model:
         tags: _resnet50,_pytorch
@@ -692,6 +693,9 @@ variations:
     env:
       CM_MLPERF_LOADGEN_MAX_BATCHSIZE: "#"
     add_deps_recursive:
+      ml-model:
+        tags:
+          _batch_size.#
       tvm-model:
         tags:
           _batch_size.#
