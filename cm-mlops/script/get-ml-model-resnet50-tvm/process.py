@@ -149,7 +149,7 @@ else:
             work_dir=work_dir,
             max_trials_global=20000,
             num_trials_per_iter=64,
-            max_trials_per_task=256,
+            max_trials_per_task=256,g
             builder=ms.builder.LocalBuilder(),
             runner=ms.runner.LocalRunner(evaluator_config=evaluator_config),
         )
