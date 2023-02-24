@@ -82,6 +82,8 @@ def preprocess(i):
         ml_model_name = "bert"
     if 'dlrm' in ml_model_name:
         ml_model_name = "dlrm"
+    if '3d-unet' in ml_model_name:
+        ml_model_name = "3d-unet"
 
     query_count = None
 
@@ -103,7 +105,7 @@ def preprocess(i):
         if metric in conf:
             metric_value = conf[metric]
         else:
-            if env.get("CM_MLPERF_FIND_PERFORMANCE", False):
+            if env.get("CM_MLPERF_FIND_PERFORMANCE", '') == "yes":
                 if metric == "target_qps":
                     print("In find performance mode: using 1 as target_qps")
                     conf[metric] = 1
@@ -152,12 +154,21 @@ def preprocess(i):
 
     else:
         if scenario == "MultiStream":
-            query_count = str(int((8000 / float(conf['target_latency'])) * 660))
+            query_count = str(max(int((8000 / float(conf['target_latency'])) * 660), 662))
             user_conf += ml_model_name + "." + scenario + ".max_query_count = " + query_count + "\n"
+            user_conf += ml_model_name + "." + scenario + ".min_query_count = " + query_count + "\n"
+        elif scenario == "SingleStream":
+            query_count = str(max(int((1000 / float(conf['target_latency'])) * 660), 662))
+            user_conf += ml_model_name + "." + scenario + ".max_query_count = " + str(int(query_count)+40) + "\n"
             user_conf += ml_model_name + "." + scenario + ".min_query_count = " + query_count + "\n"
 
     if query_count:
         env['CM_MAX_EXAMPLES'] = query_count #needed for squad accuracy checker
+
+    if env.get('CM_MLPERF_PERFORMANCE_SAMPLE_COUNT', '') != '':
+        performance_sample_count = env['CM_MLPERF_PERFORMANCE_SAMPLE_COUNT']
+        user_conf += ml_model_name + ".*.performance_sample_count_override = " + performance_sample_count + "\n"
+
 
     import uuid
     key = uuid.uuid4().hex
@@ -224,7 +235,7 @@ def run_files_exist(mode, OUTPUT_DIR, run_files):
     file_loc = {"accuracy": 0, "performance": 1, "power": 2, "performance_power": 3, "measure": 4, "compliance": 1}
     for file in run_files[file_loc[mode]]:
         file_path = os.path.join(OUTPUT_DIR, file)
-        if not os.path.exists(file_path) and file != "accuracy.txt":
+        if (not os.path.exists(file_path) or os.stat(file_path).st_size == 0)  and file != "accuracy.txt":
             return False
 
     return True

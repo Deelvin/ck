@@ -42,6 +42,7 @@ input_mapping:
   scenario: CM_MLPERF_LOADGEN_SCENARIO
   user_conf: CM_MLPERF_USER_CONF
   skip_preprocess: CM_SKIP_PREPROCESS_DATASET
+  skip_preprocessing: CM_SKIP_PREPROCESS_DATASET
   target_qps: CM_MLPERF_LOADGEN_TARGET_QPS
   offline_target_qps: CM_MLPERF_LOADGEN_OFFLINE_TARGET_QPS
   server_target_qps: CM_MLPERF_LOADGEN_SERVER_TARGET_QPS
@@ -169,11 +170,11 @@ variations:
   # Target devices
   cpu:
     group: device
-    default: true
     env:
       CM_MLPERF_DEVICE: cpu
   cuda:
     group: device
+    default: true
     env:
       CM_MLPERF_DEVICE: gpu
       CM_MLPERF_DEVICE_LIB_NAMESPEC: cudart
@@ -183,6 +184,7 @@ variations:
     default: true
     env:
       CM_MLPERF_BACKEND: tensorrt
+      CM_MLPERF_BACKEND_NAME: TensorRT
 
   # Reference MLPerf models
   resnet50:
@@ -202,21 +204,36 @@ variations:
     - tags: get,generic-python-lib,_torchvision
     - tags: get,generic-python-lib,_opencv-python
 
+  bert_:
+    deps:
+    - tags: get,generic-python-lib,_transformers
+
   bert-99:
     group: model
+    base:
+    - bert_
     env:
       CM_MODEL: bert-99
 
   bert-99.9:
     group: model
+    base:
+    - bert_
     env:
       CM_MODEL: bert-99.9
 
   batch_size.#:
     env:
-      CM_MODEL_BATCH_SIZE: #
-      CM_MLPERF_NVIDIA_HARNESS_GPU_BATCH_SIZE: #
+      CM_MODEL_BATCH_SIZE: "#"
+      CM_MLPERF_NVIDIA_HARNESS_GPU_BATCH_SIZE: "#"
+      CM_MLPERF_SUT_NAME_RUN_CONFIG_SUFFIX1: "gpu_batch_size.#"
 
   dla_batch_size.#:
     env:
-      CM_MLPERF_NVIDIA_HARNESS_DLA_BATCH_SIZE: #
+      CM_MLPERF_NVIDIA_HARNESS_DLA_BATCH_SIZE: "#"
+      CM_MLPERF_SUT_NAME_RUN_CONFIG_SUFFIX2: "dla_batch_size.#"
+
+  use_triton:
+    env:
+      CM_MLPERF_NVIDIA_HARNESS_USE_TRITON: "yes"
+      CM_MLPERF_SUT_NAME_RUN_CONFIG_SUFFIX3: "using_triton"
