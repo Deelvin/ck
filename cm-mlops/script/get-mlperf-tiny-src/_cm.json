@@ -1,0 +1,42 @@
+{
+  "alias": "get-mlperf-tiny-src",
+  "automation_alias": "script",
+  "automation_uid": "5b4e0237da074764",
+  "cache": true,
+  "deps": [
+    {
+      "tags": "detect,os"
+    },
+    {
+      "names": [
+        "python",
+        "python3"
+      ],
+      "tags": "get,python"
+    }
+  ],
+  "default_env": {
+    "CM_GIT_DEPTH": "--depth 6",
+    "CM_GIT_PATCH": "no",
+    "CM_GIT_URL": "https://github.com/mlcommons/tiny.git",
+    "CM_GIT_RECURSE_SUBMODULES": "",
+    "CM_GIT_CHECKOUT": "master"
+  },
+  "new_env_keys": [
+    "+PYTHONPATH",
+    "CM_MLPERF_TINY_*"
+  ],
+  "new_state_keys": [],
+  "post_deps": [],
+  "posthook_deps": [],
+  "prehook_deps": [],
+  "tags": [
+    "get",
+    "mlcommons",
+    "tiny",
+    "src"
+  ],
+  "uid": "6ecbf03aac10418b",
+  "variations": {},
+  "versions": {}
+}

@@ -1,0 +1,82 @@
+{
+  "alias": "app-mlperf-tiny",
+  "automation_alias": "script",
+  "automation_uid": "5b4e0237da074764",
+  "cache": false,
+  "category": "Modular MLPerf benchmarks",
+  "deps": [
+    {
+      "tags": "detect,os"
+    },
+    {
+      "tags": "get,sys-utils-cm"
+    },
+    {
+      "names": [
+        "python",
+        "python3"
+      ],
+      "tags": "get,python"
+    },
+    {
+      "names": [
+        "tiny-src"
+      ],
+      "tags": "get,mlcommons,tiny,src"
+    }
+  ],
+  "input_description": {},
+  "input_mapping": {},
+  "new_env_keys": [
+    "CM_MLPERF_*"
+  ],
+  "new_state_keys": [],
+  "post_deps": [],
+  "posthook_deps": [],
+  "prehook_deps": [],
+  "tags": [
+    "app",
+    "mlperf",
+    "mlcommons",
+    "tiny"
+  ],
+  "uid": "ee58aa6fa9f44e44",
+  "variations": {
+    "anomaly_detection": {
+      "group": "use_case",
+      "env": {
+        "CM_MLPERF_TINY_USE_CASE": "anomaly_detection"
+      }
+    },
+    "image_classification": {
+      "group": "use_case",
+      "env": {
+        "CM_MLPERF_TINY_USE_CASE": "image_classification"
+      }
+    }
+  },
+  "keyword_spotting": {
+    "group": "use_case",
+    "env": {
+      "CM_MLPERF_TINY_USE_CASE": "keyword_spotting"
+    }
+  },
+  "visual_wake_words": {
+    "group": "use_case",
+    "env": {
+      "CM_MLPERF_TINY_USE_CASE": "visual_wake_words"
+    }
+  },
+  "nano_33_ble": {
+    "group": "board",
+    "env": {
+      "CM_MLPERF_TINY_BOARD_TARGET": "ARDUINO_NANO33BLE"
+    }
+  },
+  "nucleo": {
+    "group": "board",
+    "env": {
+      "CM_MLPERF_TINY_BORAD_TARGET": "NUCLEO_L45ZI"
+    }
+  }
+}
