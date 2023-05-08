@@ -8,8 +8,8 @@ on:
     branches: [ "master", "dev" ]
     paths:
       - '.github/workflows/test-cm-script-features.yml'
-      - '!cm-mlops/**.md'
       - 'cm-mlops/**'
+      - '!cm-mlops/**.md'
 
 jobs:
   build:
