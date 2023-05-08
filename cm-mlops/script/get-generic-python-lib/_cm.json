@@ -783,6 +783,22 @@
       "new_env_keys": [
         "CM_TORNADO_VERSION"
       ]
+    },
+    "mbed-cli": {
+      "env": {
+        "CM_GENERIC_PYTHON_PACKAGE_NAME": "mbed-cli"
+      },
+      "new_env_keys": [
+        "CM_MBED_CLI_VERSION"
+      ]
+    },
+    "mbed-tools": {
+      "env": {
+        "CM_GENERIC_PYTHON_PACKAGE_NAME": "mbed-tools"
+      },
+      "new_env_keys": [
+        "CM_MBED_TOOLS_VERSION"
+      ]
     }
   }
 }

@@ -1,0 +1,16 @@
+{
+  "alias": "get-gcc-arm",
+  "automation_alias": "script",
+  "automation_uid": "5b4e0237da074764",
+  "cache": true,
+  "deps": [],
+  "new_env_keys": [
+    "CM_GCC_ARM_PATH",
+    "+PATH"
+  ],
+  "tags": [
+    "get",
+    "gcc-arm"
+  ],
+  "uid": "301e1fe2121f4751"
+}

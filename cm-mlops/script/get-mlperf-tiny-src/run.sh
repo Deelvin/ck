@@ -18,5 +18,6 @@ if [ ! -d "tiny" ]; then
     if [ "${?}" != "0" ]; then 
         exit 1 
     fi
+fi
 
-cd "$CUR_DIR"
+cd ${CUR_DIR}

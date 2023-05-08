@@ -1,0 +1,41 @@
+{
+  "alias": "get-mbed",
+  "automation_alias": "script",
+  "automation_uid": "5b4e0237da074764",
+  "cache": true,
+  "deps": [
+    {
+      "tags": "detect,os"
+    },
+    {
+      "tags": "get,sys-utils-cm"
+    },
+    {
+      "names": [
+        "python",
+        "python3"
+      ],
+      "tags": "get,python"
+    },
+    {
+      "names": [
+        "mbed-cli"
+      ],
+      "tags": "get,generic-python-lib,_mbed-cli"
+    },
+    {
+      "tags": "get,generic-python-lib,_mbed-tools"
+    },
+    {
+      "tags": "get,gcc-arm"
+    }
+  ],
+  "new_env_keys": [],
+  "new_state_keys": [],
+  "tags": [
+    "get",
+    "mbed",
+    "mbed-cli"
+  ],
+  "uid": "16c24a37218a4dd1"
+}

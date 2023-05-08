@@ -29,11 +29,11 @@ See [more info](README-extra.md).
 
 #### Information
 
-* CM GitHub repository: *[local]()*
-* GitHub directory for this script: *[GitHub]()*
+* CM GitHub repository: *[mlcommons@ck](https://github.com/mlcommons/ck/tree/master/cm-mlops)*
+* GitHub directory for this script: *[GitHub](https://github.com/mlcommons/ck/tree/master/cm-mlops/script/get-mbed)*
 * CM meta description for this script: *[_cm.json](_cm.json)*
-* CM "database" tags to find this script: **
-* Output cached?: *False*
+* CM "database" tags to find this script: *get,mbed,mbed-cli*
+* Output cached?: *True*
 ___
 ### Usage
 
@@ -43,7 +43,7 @@ ___
 
 ##### CM pull repository
 
-```cm pull repo local```
+```cm pull repo mlcommons@ck```
 
 ##### CM script automation help
 
@@ -51,11 +51,11 @@ ___
 
 #### CM CLI
 
-1. `cm run script --tags= `
+1. `cm run script --tags=get,mbed,mbed-cli `
 
-2. `cm run script "" `
+2. `cm run script "get mbed mbed-cli" `
 
-3. `cm run script ee58aa6fa9f44e44 `
+3. `cm run script 16c24a37218a4dd1 `
 
 * `variations` can be seen [here](#variations)
 
@@ -72,7 +72,7 @@ import cmind
 
 r = cmind.access({'action':'run'
                   'automation':'script',
-                  'tags':''
+                  'tags':'get,mbed,mbed-cli'
                   'out':'con',
                   ...
                   (other input keys for this script)
@@ -89,9 +89,9 @@ if r['return']>0:
 
 #### CM GUI
 
-```cm run script --tags=gui --script=""```
+```cm run script --tags=gui --script="get,mbed,mbed-cli"```
 
-Use this [online GUI](https://cKnowledge.org/cm-gui/?tags=) to generate CM CMD.
+Use this [online GUI](https://cKnowledge.org/cm-gui/?tags=get,mbed,mbed-cli) to generate CM CMD.
 
 #### CM modular Docker container
 
@@ -116,15 +116,28 @@ ___
 <details>
 <summary>Click here to expand this section.</summary>
 
-  1. Read "deps" on other CM scripts from [meta](/_cm.json)
-  1. ***Run "preprocess" function from [customize.py](/customize.py)***
-  1. Read "prehook_deps" on other CM scripts from [meta](/_cm.json)
+  1. ***Read "deps" on other CM scripts from [meta](https://github.com/mlcommons/ck/tree/master/cm-mlops/script/get-mbed/_cm.json)***
+     * detect,os
+       - CM script: [detect-os](https://github.com/mlcommons/ck/tree/master/cm-mlops/script/detect-os)
+     * get,sys-utils-cm
+       - CM script: [get-sys-utils-cm](https://github.com/mlcommons/ck/tree/master/cm-mlops/script/get-sys-utils-cm)
+     * get,python
+       * CM names: `--adr.['python', 'python3']...`
+       - CM script: [get-python3](https://github.com/mlcommons/ck/tree/master/cm-mlops/script/get-python3)
+     * get,generic-python-lib,_mbed-cli
+       * CM names: `--adr.['mbed-cli']...`
+       - CM script: [get-generic-python-lib](https://github.com/mlcommons/ck/tree/master/cm-mlops/script/get-generic-python-lib)
+     * get,generic-python-lib,_mbed-tools
+       - CM script: [get-generic-python-lib](https://github.com/mlcommons/ck/tree/master/cm-mlops/script/get-generic-python-lib)
+     * get,gcc-arm
+       - CM script: [get-gcc-arm](https://github.com/mlcommons/ck/tree/master/cm-mlops/script/get-gcc-arm)
+  1. ***Run "preprocess" function from [customize.py](https://github.com/mlcommons/ck/tree/master/cm-mlops/script/get-mbed/customize.py)***
+  1. Read "prehook_deps" on other CM scripts from [meta](https://github.com/mlcommons/ck/tree/master/cm-mlops/script/get-mbed/_cm.json)
   1. ***Run native script if exists***
-     * [run.bat](/run.bat)
-     * [run.sh](/run.sh)
-  1. Read "posthook_deps" on other CM scripts from [meta](/_cm.json)
-  1. ***Run "postrocess" function from [customize.py](/customize.py)***
-  1. Read "post_deps" on other CM scripts from [meta](/_cm.json)
+     * [run.sh](https://github.com/mlcommons/ck/tree/master/cm-mlops/script/get-mbed/run.sh)
+  1. Read "posthook_deps" on other CM scripts from [meta](https://github.com/mlcommons/ck/tree/master/cm-mlops/script/get-mbed/_cm.json)
+  1. ***Run "postrocess" function from [customize.py](https://github.com/mlcommons/ck/tree/master/cm-mlops/script/get-mbed/customize.py)***
+  1. Read "post_deps" on other CM scripts from [meta](https://github.com/mlcommons/ck/tree/master/cm-mlops/script/get-mbed/_cm.json)
 </details>
 
 ___

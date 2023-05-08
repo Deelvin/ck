@@ -26,15 +26,13 @@
     "+PYTHONPATH",
     "CM_MLPERF_TINY_*"
   ],
-  "new_state_keys": [],
-  "post_deps": [],
-  "posthook_deps": [],
-  "prehook_deps": [],
   "tags": [
     "get",
     "mlcommons",
     "tiny",
-    "src"
+    "src",
+    "source",
+    "mlperf"
   ],
   "uid": "6ecbf03aac10418b",
   "variations": {},
