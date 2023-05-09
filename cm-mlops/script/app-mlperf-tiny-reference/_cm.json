@@ -4,6 +4,7 @@
   "automation_uid": "5b4e0237da074764",
   "cache": false,
   "category": "Modular MLPerf benchmarks",
+  "default_variation": "keyword_spotting",
   "deps": [
     {
       "tags": "detect,os"
@@ -26,21 +27,13 @@
     }
   ],
   "input_description": {},
-  "input_mapping": {},
+  "input_mapping": {
+    "board": "CM_MLPERF_TINY_BOARD",
+    "port": "CM_MLPERF_TINY_PORT"
+  },
   "new_env_keys": [
     "CM_MLPERF_*"
   ],
-  "new_state_keys": [],
-  "post_deps": [],
-  "posthook_deps": [
-    {
-      "tags": "tiny,flush",
-      "skip_if_env": {
-        "CM_MLPERF_SKIP_RUN": "on"
-      }
-    }
-  ],
-  "prehook_deps": [],
   "tags": [
     "app",
     "mlperf",
@@ -68,6 +61,7 @@
     },
     "keyword_spotting": {
       "group": "use_case",
+      "default": true,
       "env": {
         "CM_MLPERF_TINY_USE_CASE": "keyword_spotting",
         "CM_MLPERF_TINY_DATASET": "Speech Commands",
