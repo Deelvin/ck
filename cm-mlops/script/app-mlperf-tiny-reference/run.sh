@@ -30,6 +30,5 @@ if [[ ${CM_MLPERF_TINY_RTOS_NAME} == "mbed" ]]; then
     cp ../../main.cpp .
     cp -r ../../util .
 
-    mbed compile -m ${CM_MLPERF_TINY_BOARD} -t GCC_ARM
-    cp BUILD/${CM_MLPERF_TINY_BOARD}/GCC_ARM/${CM_MLPERF_TINY_USE_CASE}.bin /dev/${CM_MLPERF_TINY_PORT}
+    mbed compile -m ${CM_MLPERF_TINY_BOARD} -t GCC_ARM --verbose --flash
 fi
