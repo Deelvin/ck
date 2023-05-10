@@ -3,9 +3,14 @@
   "automation_alias": "script",
   "automation_uid": "5b4e0237da074764",
   "cache": true,
-  "deps": [],
+  "deps": [
+    {
+      "tags": "get,sys-utils-cm"
+    }
+  ],
   "new_env_keys": [
     "CM_GCC_ARM_PATH",
+    "CM_GCC_ARM_BIN_PATH",
     "+PATH"
   ],
   "tags": [

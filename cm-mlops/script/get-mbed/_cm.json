@@ -30,7 +30,9 @@
       "tags": "get,gcc-arm"
     }
   ],
-  "new_env_keys": [],
+  "new_env_keys": [
+    "CM_GCC_ARM_*"
+  ],
   "new_state_keys": [],
   "tags": [
     "get",

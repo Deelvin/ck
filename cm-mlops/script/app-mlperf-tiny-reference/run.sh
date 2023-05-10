@@ -19,7 +19,7 @@ if [[ ${CM_MLPERF_TINY_RTOS_NAME} == "mbed" ]]; then
         rm -rf tensorflow-*
         rm -rf tensorflow/lite/micro/examples/hello_world
     fi
-
+    python3 -m pip install markupsafe==2.0.1 --force
     mbed config root .
     mbed deploy
     cd ./mbed-os
@@ -30,5 +30,6 @@ if [[ ${CM_MLPERF_TINY_RTOS_NAME} == "mbed" ]]; then
     cp ../../main.cpp .
     cp -r ../../util .
 
-    mbed compile -m ${CM_MLPERF_TINY_BOARD} -t GCC_ARM --verbose --flash
+    mbed compile -m ${CM_MLPERF_TINY_BOARD} -t GCC_ARM --verbose
+    cp BUILD/${CM_MLPERF_TINY_BOARD}/GCC_ARM/${CM_MLPERF_TINY_USE_CASE}.bin /dev/${CM_MLPERF_TINY_PORT}
 fi
