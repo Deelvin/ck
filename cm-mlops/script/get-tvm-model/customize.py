@@ -1,17 +1,18 @@
 from cmind import utils
 import os
 
-
 def preprocess(i):
 
     os_info = i['os_info']
 
     env = i['env']
 
+    meta = i['meta']
+
     automation = i['automation']
 
-    cm = automation.cmind
-
+    quiet = (env.get('CM_QUIET', False) == 'yes')
+    
     work_dir = env.get('CM_TUNE_TVM_MODEL_WORKDIR', '')
 
     if work_dir != '':
@@ -30,11 +31,15 @@ def preprocess(i):
         if env.get('CM_TUNE_TVM_MODEL', '') != '':
             print("The \"tune-model\" variation is selected, but at the same time the path to the existing \"work_dir\" is also specified. The compiled model will be based on the found existing \"work_dir\".")
             env["CM_TUNE_TVM_MODEL"] = "no"
+            
+    
 
-    return {'return': 0}
-
+    return {'return':0}
 
 def postprocess(i):
+
+    env = i['env']
+    
     env = i['env']
     env['CM_ML_MODEL_ORIGINAL_FILE_WITH_PATH'] = env['CM_ML_MODEL_FILE_WITH_PATH']
     env['CM_ML_MODEL_FILE'] = 'model-tvm.so'
@@ -45,4 +50,5 @@ def postprocess(i):
     env['CM_ML_MODEL_INPUT_SHAPES'] = env['CM_ML_MODEL_INPUT_SHAPES'].replace(
         "BATCH_SIZE", env['CM_ML_MODEL_MAX_BATCH_SIZE'])
 
-    return {'return': 0}
+
+    return {'return':0}

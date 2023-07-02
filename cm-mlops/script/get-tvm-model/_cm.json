@@ -1,9 +1,8 @@
 {
-  "alias": "get-ml-model-resnet50-tvm",
+  "alias": "get-tvm-model",
   "automation_alias": "script",
   "automation_uid": "5b4e0237da074764",
   "cache": true,
-  "category": "ML/AI models",
   "deps": [
     {
       "names": [
@@ -43,12 +42,8 @@
   ],
   "tags": [
     "get",
-    "ml-model",
     "ml-model-tvm",
-    "tvm-model",
-    "resnet50",
-    "ml-model-resnet50",
-    "image-classification"
+    "tvm-model"
   ],
   "uid": "c1b7b656b6224307",
   "variations": {
@@ -84,7 +79,7 @@
           "names": [
             "original-model"
           ],
-          "tags": "get,ml-model,raw,resnet50,_onnx"
+          "tags": "get,ml-model,raw,<<<CM_ML_MODEL>>>,_onnx"
         },
         {
           "names": [
@@ -93,7 +88,7 @@
           "tags": "get,generic-python-lib,_onnx"
         }
       ],
-      "group": "framework"
+      "group": "frontend"
     },
     "pytorch": {
       "deps": [
@@ -101,7 +96,7 @@
           "names": [
             "original-model"
           ],
-          "tags": "get,ml-model,raw,resnet50,_pytorch"
+          "tags": "get,ml-model,raw,<<<CM_ML_MODEL>>>,_pytorch"
         },
         {
           "names": [
@@ -111,7 +106,7 @@
           "tags": "get,generic-python-lib,_torch"
         }
       ],
-      "group": "framework"
+      "group": "frontend"
     },
     "tensorflow": {
       "deps": [
@@ -119,13 +114,24 @@
           "names": [
             "original-model"
           ],
-          "tags": "get,ml-model,raw,resnet50,_tf"
+          "tags": "get,ml-model,raw,<<<CM_ML_MODEL>>>,_tf"
         },
         {
           "names": [
             "tensorflow"
           ],
           "tags": "get,generic-python-lib,_tensorflow"
+        }
+      ],
+      "group": "frontend"
+    },
+    "tflite": {
+      "deps": [
+        {
+          "names": [
+            "original-model"
+          ],
+          "tags": "get,ml-model,raw,<<<CM_ML_MODEL>>>,_tflite"
         },
         {
           "names": [
@@ -134,35 +140,35 @@
           "tags": "get,generic-python-lib,_tflite"
         }
       ],
-      "group": "framework"
+      "group": "frontend"
+    }
+  },
+  "tune-model": {
+    "env": {
+      "CM_TUNE_TVM_MODEL": "yes"
     },
-    "tf": {
-      "alias": "tensorflow"
-    },
-    "tflite": {
-      "alias": "tensorflow"
-    },
-    "tune-model": {
-      "env": {
-        "CM_TUNE_TVM_MODEL": "yes"
+    "deps": [
+      {
+        "tags": "get,generic-python-lib,_xgboost"
       },
-      "deps": [
-        {
-          "tags": "get,generic-python-lib,_xgboost"
-        },
-        {
-          "tags": "get,generic-python-lib,_pandas"
-        },
-        {
-          "tags": "get,generic-python-lib,_tornado"
-        }
-      ]
-    },
-    "batch_size.#": {
-      "group": "batchsize",
-      "env": {
-        "CM_ML_MODEL_MAX_BATCH_SIZE": "#"
+      {
+        "tags": "get,generic-python-lib,_pandas"
+      },
+      {
+        "tags": "get,generic-python-lib,_tornado"
       }
+    ]
+  },
+  "batch_size.#": {
+    "group": "batchsize",
+    "env": {
+      "CM_ML_MODEL_MAX_BATCH_SIZE": "#"
+    }
+  },
+  "model.#": {
+    "group": "model",
+    "env": {
+      "CM_ML_MODEL": "#"
     }
   }
 }
