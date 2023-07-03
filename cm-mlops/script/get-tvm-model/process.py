@@ -2,14 +2,28 @@ import os
 import tempfile
 import tvm
 from tvm import relay
+from tvm.driver.tvmc.model import TVMCModel
+from tvm.driver.tvmc.frontends import load_model
 
 max_batchsize = os.environ['CM_ML_MODEL_MAX_BATCH_SIZE']
 input_shapes = os.environ.get('CM_ML_MODEL_INPUT_SHAPES', '').strip()
 
 if input_shapes == '':
     print('')
-    raise RuntimeError(
-        "Error: CM_ML_MODEL_INPUT_SHAPES environment variable is not defined!")
+    width = os.environ.get('CM_ML_MODEL_IMAGE_WIDTH', '')
+    height = os.environ.get('CM_ML_MODEL_IMAGE_HEIGHT', '')
+    
+    if width == '' or height == '':
+        raise RuntimeError(
+            "Error: CM_ML_MODEL_INPUT_SHAPES environment variable is not defined!")
+        
+    if os.environ.get("CM_TVM_FRONTEND_FRAMEWORK") == "onnx":
+        import onnx
+        onnx_model = onnx.load(os.environ.get('CM_ML_MODEL_FILE_WITH_PATH'))
+        input_all = [node.name for node in onnx_model.graph.input]
+        input_initializer =  [node.name for node in onnx_model.graph.initializer]
+        net_feed_input = list(set(input_all)  - set(input_initializer))
+        input_shapes = f"\"{net_feed_input[0]}\": (BATCH_SIZE, 3, {height}, {width})"
 
 input_shapes = input_shapes.replace('BATCH_SIZE', str(max_batchsize))
 model_path = os.environ.get('CM_ML_MODEL_FILE_WITH_PATH')
@@ -29,99 +43,10 @@ else:
 
     build_conf = {}
     params = {}
-
-    if model_path.endswith('.pt') or model_path.endswith('.pth'):
-        import torch
-        from tvm.relay.build_module import bind_params_by_name
-        from torchvision.models import resnet50
-
-        shape_list = eval('[' + input_shapes + ']')
-
-        print('TVM shape list: '+str(shape_list))
-
-        x = os.environ.get('CM_MLPERF_TVM_TORCH_QUANTIZED_ENGINE', '')
-        if x != '':
-            torch.backends.quantized.engine = x
-
-        if model_path.endswith('.pt'):
-            pytorch_model = torch.jit.load(model_path)
-        elif model_path.endswith('.pth'):
-            pytorch_model = resnet50()
-            pytorch_model.load_state_dict(torch.load(model_path))
-        pytorch_model.eval()
-
-        input_data = torch.randn(shape_list[0][1])
-        pytorch_model = torch.jit.trace(pytorch_model, input_data)
-
-        mod, params = relay.frontend.from_pytorch(pytorch_model, shape_list)
-
-        mod["main"] = bind_params_by_name(mod["main"], params)
-
-        # Some optimizations
-        mod = relay.transform.FoldConstant()(mod)
-
-        if os.environ.get('CM_MLPERF_TVM_USE_DNNL', '').strip().lower() == 'yes':
-            from tvm.relay.op.contrib.dnnl import partition_for_dnnl
-            from tvm.driver.tvmc.common import convert_graph_layout
-
-            #  move to NHWC layout, prerequisite for DNNL partitioning
-            mod = convert_graph_layout(mod, "NHWC")
-            mod = relay.transform.FoldConstant()(mod)
-
-            mod = partition_for_dnnl(mod)
-
-    elif model_path.endswith('.onnx'):
-        import onnx
-
-        shape_dict = eval('{' + input_shapes + '}')
-
-        print('TVM shape dict: '+str(shape_dict))
-
-        onnx_model = onnx.load(model_path)
-
-        mod, params = relay.frontend.from_onnx(
-            onnx_model, shape_dict, freeze_params=True
-        )
-
-        if os.environ.get('CM_MLPERF_TVM_TRANSFORM_LAYOUT', '').strip().lower() == 'yes':
-            kernel_layout = 'NHWC'
-
-            desired_layouts = {
-                'qnn.conv2d': [kernel_layout, 'default'],
-                'nn.conv2d': [kernel_layout, 'default'],
-                'nn.conv2d_transpose': [kernel_layout, 'default'],
-                'nn.depthwise_conv2d': [kernel_layout, 'default'],
-                'nn.conv3d': [kernel_layout, 'default'],
-                'nn.conv3d_transpose': [kernel_layout, 'default'],
-            }
-
-            seq = tvm.transform.Sequential([relay.transform.RemoveUnusedFunctions(),
-                                            relay.transform.FoldConstant(),
-                                            relay.transform.ConvertLayout(
-                                                desired_layouts),
-                                            ])
-
-            with tvm.transform.PassContext(opt_level=3):
-                mod = seq(mod)
-
-    elif model_path.endswith('.tflite'):
-        # Grigori used https://tvm.apache.org/docs/tutorials/frontend/deploy_prequantized_tflite.html
-
-        import tflite
-
-        shape_dict = eval('{' + input_shapes + '}')
-
-        print('TVM shape dict: '+str(shape_dict))
-
-        tflite_model_buf = open(model_path, "rb").read()
-        tflite_model = tflite.Model.GetRootAsModel(tflite_model_buf, 0)
-
-        mod, params = relay.frontend.from_tflite(tflite_model, shape_dict)
-
-    else:
-        print('')
-        raise RuntimeError(
-            f"Error: model extension is not supported in TVM backend ({model_path})!")
+    
+    shape_dict = eval('{' + input_shapes + '}')
+    tvmc_model = load_model(path=model_path, shape_dict=shape_dict)
+    mod, params = tvmc_model.mod, tvmc_model.params
 
     opt_lvl = int(os.environ.get('CM_MLPERF_TVM_OPT_LEVEL', 3))
 
