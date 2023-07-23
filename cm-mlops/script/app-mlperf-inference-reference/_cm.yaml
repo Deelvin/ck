@@ -587,6 +587,22 @@ variations:
         _model.: 
         - CM_MODEL
 
+  tvm-tensorflow:
+    group: framework
+    env:
+      CM_MLPERF_BACKEND: tvm-tensorflow
+    deps:
+    - tags: get,generic-python-lib,_tensorflow
+    - tags: get,tvm
+      names:
+      - tvm
+    - tags: get,tvm-model,_tensorflow
+      names:
+      - tvm-model
+      update_tags_from_env_with_prefix:
+        _model.: 
+        - CM_MODEL
+
   # Reference MLPerf models
   gptj-99.9:
     group: models

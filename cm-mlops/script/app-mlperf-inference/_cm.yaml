@@ -592,7 +592,7 @@ variations:
   tvm-onnx:
     group: backend
     base:
-      - batch_size.32
+    - batch_size.32
     env:
       CM_MLPERF_BACKEND: tvm-onnx
     add_deps_recursive:
@@ -601,6 +601,8 @@ variations:
 
   tvm-pytorch:
     group: backend
+    base:
+    - batch_size.32
     env:
       CM_MLPERF_BACKEND: tvm-pytorch
     add_deps_recursive:
@@ -610,12 +612,22 @@ variations:
   tvm-tflite:
     group: backend
     base:
-      - batch_size.1
+    - batch_size.32
     env:
       CM_MLPERF_BACKEND: tvm-tflite
     add_deps_recursive:
       mlperf-inference-implementation:
         tags: _tvm-tflite
+
+  tvm-tensorflow:
+    group: backend
+    base:
+    - batch_size.32
+    env:
+      CM_MLPERF_BACKEND: tvm-tensorflow
+    add_deps_recursive:
+      mlperf-inference-implementation:
+        tags: _tvm-tensorflow
 
   cpu:
     group:
