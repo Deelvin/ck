@@ -595,6 +595,9 @@ variations:
     env:
       CM_MLPERF_BACKEND: tvm-tflite
       CM_MLPERF_BACKEND_VERSION: <<<CM_TVM-TFLITE_VERSION>>>
+    add_deps_recursive:
+      imagenet-preprocessed:
+        tags: _NHWC
     deps:
     - tags: get,generic-python-lib,_tflite
     - tags: get,tvm

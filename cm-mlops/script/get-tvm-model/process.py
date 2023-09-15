@@ -1,6 +1,7 @@
 import os
 import tempfile
 import tvm
+import json
 from tvm import relay
 from tvm.driver.tvmc.model import TVMCModel
 from tvm.driver.tvmc.frontends import load_model
@@ -20,7 +21,6 @@ def get_shape_dict_from_onnx(
                 for dimension in tensor_type.shape.dim:
                     if dimension.dim_value != 0:
                         shape.append(dimension.dim_value)
-        print(shape)
     input_all = [node.name for node in onnx_model.graph.input]
     input_initializer =  [node.name for node in onnx_model.graph.initializer]
     net_feed_input = list(set(input_all)  - set(input_initializer))
@@ -32,6 +32,7 @@ def get_mod_params(
     batch_size: int,
     frontend: str,
     input_shapes_str: Optional[str] = None,
+    input_layer_name: Optional[str] = None,
     num_channels: Optional[int] = None,
     image_width: Optional[int] = None,
     image_height: Optional[int] = None,
@@ -56,6 +57,13 @@ def get_mod_params(
                 "Error: Cannot find proper shapes in environment variables"
             )
     print(f"Shape dict {shape_dict}")
+    
+    input_layer_name_file = os.path.join(os.getcwd(), "input_layer_name")
+    if not input_layer_name:
+        input_layer_name = shape_dict.keys()[0]
+    with open(input_layer_name_file, 'w') as file:
+        file.write(input_layer_name)
+
     tvmc_model = load_model(path=model_path, shape_dict=shape_dict)
     mod, params = relay.transform.DynamicToStatic()(tvmc_model.mod), tvmc_model.params
     
@@ -182,6 +190,7 @@ def main() -> None:
             batch_size=int(os.environ.get('CM_ML_MODEL_MAX_BATCH_SIZE', 1)),
             frontend=os.environ.get("CM_TVM_FRONTEND_FRAMEWORK", None),
             input_shapes_str=os.environ.get('CM_ML_MODEL_INPUT_SHAPES', None),
+            input_layer_name=os.environ.get('CM_ML_MODEL_INPUT_LAYER_NAME', None),
             num_channels=int(os.environ.get('CM_ML_MODEL_IMAGE_NUM_CHANNELS', 3)),
             image_width=int(os.environ.get('CM_ML_MODEL_IMAGE_WIDTH', 0)),
             image_height=int(os.environ.get('CM_ML_MODEL_IMAGE_HEIGHT', 0)),
